@@ -1,0 +1,1 @@
+These are JavaScript Scripts I use that are too small to have their own repository. They (should be) environment independent meaning they can be run on any JavaScript engine. If they are not please submit an issue.
