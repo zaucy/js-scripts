@@ -6,6 +6,21 @@ cleanScope(function(console) {
 });
 ```
 
+cleanScope acceps 1 - 3 arguments and can be called in these ways. Hopefully this is self explanatory. 
+```JavaScript
+cleanScope(func, global = {}, removeBuiltIns = true);
+
+cleanScope(func, removeBuiltIns);
+cleanSCope(func, global);
+cleanScope(func);
+```
+
+`func` is the function that will be called with the clean scope.
+
+`global` is what's used as the scopes global object. Anything that func sets to `this` or `global` will be reflected on that object.
+
+`removeBuiltIns` will do exactly that. It will remove builtins inside the clean scope called function. By default this is set to `true`.
+
 ## Caveat
 You may *not* use a native function with cleanScope. This includes functions created with `.bind`! To bypass this caveat you can create another function that calls that one.
 
