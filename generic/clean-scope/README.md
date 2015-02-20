@@ -7,7 +7,7 @@ cleanScope(function(console) {
 ```
 
 ## Caveat
-You may use a native function with cleanScope. This includes functions created with `.bind`! To bypass this caveat you can create another function that calls that one.
+You may *not* use a native function with cleanScope. This includes functions created with `.bind`! To bypass this caveat you can create another function that calls that one.
 
 ```JavaScript
 var bindObject = /* ... */;
