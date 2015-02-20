@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script
+			src="import-data.js"
+			data-url="example-data.json"
+			data-id="exampleData"
+			data-type="application/json"
+		></script>
+	</head>
+	<body>
+		<script>
+			if(exampleData.data == null) {
+				exampleData.oncomplete = function() {
+					document.title = this.data.title;
+					document.write(this.data.body);
+				};
+			} else {
+				document.title = exampleData.data.title;
+				document.write(this.data.body);
+			}
+		</script>
+	</body>
+</html>

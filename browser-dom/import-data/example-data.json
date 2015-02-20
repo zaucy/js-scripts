@@ -1,0 +1,4 @@
+{
+	"title": "Example Title",
+	"body": "<div style=\"text-align:center\">Document body from <a href=\"example-data.json\">example-data.json</a>!</div>"
+}
