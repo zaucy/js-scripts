@@ -19,3 +19,14 @@ cE("input[type=text]");
 cE("link[rel=stylesheet][href=/style.css]")
 // <link rel="stylesheet" href="/style.css">
 ```
+
+*Create multiple elements!*
+```JavaScript
+cE("ul#the-list > 4^li.item")
+// <ul id="the-list">
+//   <li class="item"></li>
+//   <li class="item"></li>
+//   <li class="item"></li>
+//   <li class="item"></li>
+// </ul>
+```

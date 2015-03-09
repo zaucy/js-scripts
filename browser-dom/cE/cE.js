@@ -5,6 +5,8 @@
 		var lastSymbol = null;
 		var lastSymbolIndex = 0;
 		var el = null;
+		var elRepeat = 0;
+		var bRetArray = false;
 		str += '\0';
 		for(var i=0; str.length > i; i++) {
 			var c = str[i];
@@ -25,16 +27,34 @@
 				lastSymbol = c;
 				lastSymbolIndex = i;
 			} else
-			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0') {
+			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>') {
 				if(!lastSymbol) {
-					tagName = str.substr(0, i);
+					tagName = str.substr(0, i).trim();
+					var multiIndex = tagName.indexOf('^');
+					if(multiIndex > -1) {
+						bRetArray = true;
+						elRepeat = parseInt(tagName.substring(0, multiIndex))-1;
+						tagName = tagName.substr(multiIndex+1);
+					}
 					el = document.createElement(tagName);
 				} else
 				if(lastSymbol == '#') {
-					el.id = str.substring(lastSymbolIndex+1, i);
+					el.id = str.substring(lastSymbolIndex+1, i).trim();
 				} else
 				if(lastSymbol == '.') {
-					el.classList.add(str.substring(lastSymbolIndex+1, i));
+					el.classList.add(str.substring(lastSymbolIndex+1, i).trim());
+				}
+				
+				if(c == '>') {
+					var subEl = cE(str.substring(i+1));
+					if(subEl.length > 0) {
+						for(var n=0; subEl.length > n; n++) {
+							el.appendChild(subEl[n]);
+						}
+					} else {
+						el.appendChild(subEl);
+					}
+					break;
 				}
 				
 				lastSymbol = c;
@@ -43,7 +63,13 @@
 			
 		}
 		
-		return el;
+		var els = [el];
+		
+		for(; elRepeat != 0; --elRepeat) {
+			els.push(el.cloneNode(true));
+		}
+		
+		return bRetArray ? els : el;
 	}
 	
 	exports['cE'] = cE;
