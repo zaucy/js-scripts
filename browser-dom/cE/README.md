@@ -32,4 +32,4 @@ cE("ul#the-list > 4^li.item")
 ```
 
 ## Browser Compatibility
-The script uses [`String.trim()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim) and [`Element.classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList) a few times which isn't supported by a few older browsers. Some polyfill would be needed (or just modify the code to no use trim.) It also uses  which a
+The script uses [`String.trim()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim) and [`Element.classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList) a few times which isn't supported by a few older browsers. Some polyfill would be needed (or just modify the code to not use them.)
