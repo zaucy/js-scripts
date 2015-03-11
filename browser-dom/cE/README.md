@@ -1,5 +1,5 @@
 ## cE (createElement)
-cE takes a string similar to a CSS selector and creates an element based on it. 
+cE takes a string and creates an element based on it. The string format was inspired by CSS selectors. cE will return the created element or an array of elements if there are more than 1 top level elements. To ensure you you always get an array prepend single top level strings with `1^`.
 
 #### Examples
 ```JavaScript
@@ -22,6 +22,10 @@ cE("link[rel=stylesheet][href=/style.css]")
 
 *Create multiple elements!*
 ```JavaScript
+cE("div#first + div#second")
+// <div id="first"></div>
+// <div id="second"></div>
+
 cE("ul#the-list > 4^li.item")
 // <ul id="the-list">
 //   <li class="item"></li>
@@ -29,6 +33,16 @@ cE("ul#the-list > 4^li.item")
 //   <li class="item"></li>
 //   <li class="item"></li>
 // </ul>
+```
+
+*Create text!*
+```JavaScript
+cE("div'Welcome to' > a[href=http://github.com]'GitHub' + span'.')
+// <div>
+//   Welcome to
+//   <a href="http://github.com">GitHub</a>
+//   <span>.</span>
+// </div>
 ```
 
 ## Browser Compatibility

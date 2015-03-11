@@ -1,10 +1,15 @@
 (function(exports) {
-	
+
+	var addText = function(str) {
+		
+	};
+
 	function cE(str) {
 		var tagName = "";
 		var lastSymbol = null;
 		var lastSymbolIndex = 0;
 		var el = null;
+		var els = [];
 		var elRepeat = 0;
 		var bRetArray = false;
 		str += '\0';
@@ -21,13 +26,27 @@
 					attrName = attr.substring(0, equalIndex);
 					attrValue = equalIndex == -1 ? "" : attr.substr(equalIndex+1);
 				}
-				
+
 				el.setAttribute(attrName, attrValue);
-				
+
 				lastSymbol = c;
 				lastSymbolIndex = i;
 			} else
-			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>') {
+			if(lastSymbol == '\'') {
+				if(c != '\'') continue;
+				el.textContent += str.substring(lastSymbolIndex+1, i);
+
+				lastSymbol = '\0';
+				lastSymbolIndex = i;
+			} else
+			if(lastSymbol == '"') {
+				if(c != '"') continue;
+				el.textContent += str.substring(lastSymbolIndex+1, i);
+
+				lastSymbol = '\0';
+				lastSymbolIndex = i;
+			} else
+			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>' || c =='\'' || c =='"' || c == '+') {
 				if(!lastSymbol) {
 					tagName = str.substr(0, i).trim();
 					var multiIndex = tagName.indexOf('^');
@@ -44,7 +63,7 @@
 				if(lastSymbol == '.') {
 					el.classList.add(str.substring(lastSymbolIndex+1, i).trim());
 				}
-				
+
 				if(c == '>') {
 					var subEl = cE(str.substring(i+1));
 					if(subEl.length > 0) {
@@ -55,23 +74,42 @@
 						el.appendChild(subEl);
 					}
 					break;
+				} else
+				if(c == '+') {
+					bRetArray = true;
+					els.push(el);
+					var subEls = cE(str.substr(i+1));
+					if(subEls.length > 0) {
+						for(var n=0; subEls.length-1 > n; n++) {
+							els.push(subEls[n]);
+						}
+						el = subEls[subEls.length-1];
+					} else {
+						el = subEls;
+					}
+
+					break;
 				}
-				
+
 				lastSymbol = c;
 				lastSymbolIndex = i;
 			}
-			
+
 		}
-		
-		var els = [el];
-		
+
+		els.push(el);
+		var retEls = [];
+		for(var n=0; els.length > n; n++) retEls.push(els[n]);
+
 		for(; elRepeat != 0; --elRepeat) {
-			els.push(el.cloneNode(true));
+			for(var n=0; els.length > n; n++) {
+				retEls.push(els[n].cloneNode(true));
+			}
 		}
-		
-		return bRetArray ? els : el;
+
+		return bRetArray ? retEls : el;
 	}
-	
+
 	exports['cE'] = cE;
-	
+
 }(window));
