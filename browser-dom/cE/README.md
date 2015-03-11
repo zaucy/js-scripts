@@ -37,7 +37,7 @@ cE("ul#the-list > 4^li.item")
 
 *Create text!*
 ```JavaScript
-cE("div'Welcome to' > a[href=http://github.com]'GitHub' + span'.'"")
+cE("div'Welcome to' > a[href=http://github.com]'GitHub' + span'.'")
 // <div>
 //   Welcome to
 //   <a href="http://github.com">GitHub</a>
