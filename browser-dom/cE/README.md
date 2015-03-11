@@ -40,8 +40,7 @@ cE("ul#the-list > 4^li.item")
 cE("div'Welcome to' > a[href=http://github.com]'GitHub' + '.'")
 // <div>
 //   Welcome to
-//   <a href="http://github.com">GitHub</a>
-//   <span>.</span>
+//   <a href="http://github.com">GitHub</a>.
 // </div>
 
 ```
