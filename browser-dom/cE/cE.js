@@ -1,7 +1,8 @@
 (function(exports) {
 
-	var addText = function(str) {
-		
+	var createTextEl = function(str) {
+		str = str.substring(1, str.length-1);
+		return document.createTextNode(str);
 	};
 
 	function cE(str) {
@@ -32,21 +33,23 @@
 				lastSymbol = c;
 				lastSymbolIndex = i;
 			} else
-			if(lastSymbol == '\'') {
-				if(c != '\'') continue;
-				el.textContent += str.substring(lastSymbolIndex+1, i);
+			if(lastSymbol == '\'' || lastSymbol == '"') {
+				if(c != lastSymbol) continue;
+				var text = str.substring(lastSymbolIndex+1, i);
+				if(!el) {
+					el = document.createTextNode(text);
+				} else {
+					el.textContent += text;
+				}
 
 				lastSymbol = '\0';
 				lastSymbolIndex = i;
 			} else
-			if(lastSymbol == '"') {
-				if(c != '"') continue;
-				el.textContent += str.substring(lastSymbolIndex+1, i);
-
-				lastSymbol = '\0';
+			if((c == '\'' || c == '"') && str.substr(0, i).trim() == "") {
+				lastSymbol = c;
 				lastSymbolIndex = i;
 			} else
-			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>' || c =='\'' || c =='"' || c == '+') {
+			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>' || c == '+' || c == '\'' || c == '"') {
 				if(!lastSymbol) {
 					tagName = str.substr(0, i).trim();
 					var multiIndex = tagName.indexOf('^');
@@ -55,6 +58,7 @@
 						elRepeat = parseInt(tagName.substring(0, multiIndex))-1;
 						tagName = tagName.substr(multiIndex+1);
 					}
+
 					el = document.createElement(tagName);
 				} else
 				if(lastSymbol == '#') {
@@ -66,7 +70,8 @@
 
 				if(c == '>') {
 					var subEl = cE(str.substring(i+1));
-					if(subEl.length > 0) {
+
+					if(!subEl.nodeType) {
 						for(var n=0; subEl.length > n; n++) {
 							el.appendChild(subEl[n]);
 						}
@@ -79,7 +84,7 @@
 					bRetArray = true;
 					els.push(el);
 					var subEls = cE(str.substr(i+1));
-					if(subEls.length > 0) {
+					if(!subEls.nodeType) {
 						for(var n=0; subEls.length-1 > n; n++) {
 							els.push(subEls[n]);
 						}
