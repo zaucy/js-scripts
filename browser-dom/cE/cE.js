@@ -1,9 +1,12 @@
 (function(exports) {
 
-	var createTextEl = function(str) {
-		str = str.substring(1, str.length-1);
-		return document.createTextNode(str);
-	};
+	var processNext = function(next) {
+		var next = next.trim();
+		if(next[0] == '>') throw Error("Cannot appendChild here.");
+		else if(next[0] == '+') next = next.substr(1);
+
+		return next;
+	}
 
 	function cE(str) {
 		var tagName = "";
@@ -13,7 +16,9 @@
 		var els = [];
 		var elRepeat = 0;
 		var bRetArray = false;
+		var bracketCount = 0;
 		str += '\0';
+
 		for(var i=0; str.length > i; i++) {
 			var c = str[i];
 			if(lastSymbol == '[') {
@@ -33,6 +38,26 @@
 				lastSymbol = c;
 				lastSymbolIndex = i;
 			} else
+			if(lastSymbol == '(') {
+				if(c == '(') bracketCount++;
+				else if(c == ')') bracketCount--;
+				if(bracketCount != 0) continue;
+				var subEls = cE(str.substring(lastSymbolIndex+1, i));
+				var nextElsStr = processNext(str.substring(i+1));
+				if(nextElsStr == "") return subEls;
+				if(subEls.nodeType) subEls = [subEls];
+				var nextEls = cE(nextElsStr);
+
+				if(!nextEls.nodeType) {
+					while(nextEls.length > 0) {
+						subEls.push(nextEls.pop());
+					}
+				} else {
+					subEls.push(nextEls);
+				}
+
+				return subEls;
+			} else
 			if(lastSymbol == '\'' || lastSymbol == '"') {
 				if(c != lastSymbol) continue;
 				var text = str.substring(lastSymbolIndex+1, i);
@@ -49,7 +74,12 @@
 				lastSymbol = c;
 				lastSymbolIndex = i;
 			} else
-			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>' || c == '+' || c == '\'' || c == '"') {
+			if(c == '(') {
+				bracketCount = 1;
+				lastSymbol = c;
+				lastSymbolIndex = i;
+			} else
+			if(c == '#' || c == '.' || c == '[' || c ==']' || c == '\0' || c == '>' || c == '+' || c == '\'' || c == '"' || c == '(' || c ==')') {
 				if(!lastSymbol) {
 					tagName = str.substr(0, i).trim();
 					var multiIndex = tagName.indexOf('^');
@@ -78,6 +108,7 @@
 					} else {
 						el.appendChild(subEl);
 					}
+
 					break;
 				} else
 				if(c == '+') {
