@@ -50,7 +50,7 @@
 
 				if(!nextEls.nodeType) {
 					while(nextEls.length > 0) {
-						subEls.push(nextEls.pop());
+						subEls.push(nextEls.shift());
 					}
 				} else {
 					subEls.push(nextEls);
@@ -145,6 +145,62 @@
 
 		return bRetArray ? retEls : el;
 	}
+
+	cE.stringify = function(el, deep) {
+		var str = "";
+		if(typeof deep == "undefined") deep = true;
+
+		if(deep === true) {
+			str = cE.stringify(el, false);
+			if(el.childNodes.length > 0) {
+				str += '>';
+				if(el.childNodes.length > 1) {
+					for(var i=0; el.childNodes.length-1 > i; i++) {
+						var node = el.childNodes[i];
+
+						str += "(" + cE.stringify(node) + ")+";
+					}
+
+				}
+
+				str += cE.stringify(el.childNodes[el.childNodes.length-1]);
+
+			}
+
+		} else
+		if(deep === false) {
+			if(el.nodeType == 3) {
+				return "'"+el.textContent+"'";
+			} else
+			if(el.nodeType == 1) {
+				str += el.tagName.toLowerCase();
+				if(str.id != undefined) {
+					str += "#" + str.id;
+				}
+				if(el.className) {
+					var classes = el.className.split(' ');
+					for(var n=0; classes.length > n; n++) {
+						var className = classes[n];
+						str += "." + className;
+					}
+				}
+				if(el.attributes) {
+					for(var n=0; el.attributes.length > n; n++) {
+						var attr = el.attributes[n];
+						if(attr.name == "class" || attr.name == "id") continue;
+
+						str += "[" + attr.name;
+						if(attr.value) {
+							str += "=" + attr.value;
+						}
+						str += "]";
+					}
+				}
+			}
+		}
+
+		return str;
+	};
 
 	exports['cE'] = cE;
 
