@@ -86,6 +86,9 @@
 					if(multiIndex > -1) {
 						bRetArray = true;
 						elRepeat = parseInt(tagName.substring(0, multiIndex))-1;
+						if(elRepeat === NaN) {
+							throw Error("Invalid ^ in cE string.");
+						}
 						tagName = tagName.substr(multiIndex+1);
 					}
 
@@ -137,7 +140,7 @@
 		var retEls = [];
 		for(var n=0; els.length > n; n++) retEls.push(els[n]);
 
-		for(; elRepeat != 0; --elRepeat) {
+		for(; elRepeat > 0; --elRepeat) {
 			for(var n=0; els.length > n; n++) {
 				retEls.push(els[n].cloneNode(true));
 			}
