@@ -86,7 +86,7 @@
 					if(multiIndex > -1) {
 						bRetArray = true;
 						elRepeat = parseInt(tagName.substring(0, multiIndex))-1;
-						if(elRepeat === NaN) {
+						if(isNaN(elRepeat)) {
 							throw Error("Invalid ^ in cE string.");
 						}
 						tagName = tagName.substr(multiIndex+1);
